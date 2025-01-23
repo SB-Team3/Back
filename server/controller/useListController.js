@@ -16,7 +16,7 @@ export const findTask = async(req, res) => {
 }
 
 // 심부름 신청 조회
-// 이게 심부름 신청
+// 이게 심부름 신청한거
 export async function findPartnerTask(req, res) {
     const user_Id = req.mongo_id    
     try{
@@ -38,9 +38,9 @@ export async function UpdateActive(req, res) {
     const user_Id = req.mongo_id
     const {taskId} = req.body
     const {channel} = req.params
-    if(!channel){
-        console.log(channel);
-    }
+    // if(!channel){
+    //     console.log(channel);
+    // }
     
     try{
         const updateActive = await useListQuery.UpdateActive(taskId,user_Id,channel);
@@ -61,9 +61,8 @@ export async function GetActive(req, res) {
         const user_Id = req.mongo_id
         const {taskId} = req.params
         const {channel} = req.params
-        
+
         const GetActive = await useListQuery.GetActive(taskId,user_Id,channel);
-        console.log('GetActive',GetActive);
 
         return res.status(200).json({ data: GetActive });
 

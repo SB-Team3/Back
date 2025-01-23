@@ -11,8 +11,8 @@ export async function creatChat(req, res) {
     const { channel } = req.params;
     const { taskId, userId, currentUserId } = req.body;
 
-    console.log('요청 데이터(req.body):', req.body);
-    console.log('요청 파라미터(req.params):', req.params);
+    // console.log('요청 데이터(req.body):', req.body);/
+    // console.log('요청 파라미터(req.params):', req.params);
 
     if (!taskId || !userId || !currentUserId) {
         console.error('필수 데이터 누락:', { taskId, userId, currentUserId });
@@ -36,7 +36,7 @@ export async function creatChat(req, res) {
         });
 
         if (existingChat) {
-            console.log('이미 존재하는 채팅방:', existingChat);
+            // console.log('이미 존재하는 채팅방:', existingChat);
             return res.status(200).json({
                 success: true,
                 message: '이미 존재하는 채팅방입니다.',
@@ -52,7 +52,7 @@ export async function creatChat(req, res) {
 
         // taskId를 ObjectId로 변환
         const order = await Order.findOne({ taskId: new mongoose.Types.ObjectId(taskId) });
-        console.log('Order 데이터:', order);
+        // console.log('Order 데이터:', order);
 
         if (!order) {
             console.error('Order 데이터가 없습니다:', { taskId });
@@ -74,7 +74,7 @@ export async function creatChat(req, res) {
         });
 
         const savedChat = await chat.save();
-        console.log('생성된 Chat 데이터:', savedChat);
+        // console.log('생성된 Chat 데이터:', savedChat);
 
         res.status(201).json({ 
             success: true, 
@@ -112,7 +112,8 @@ export async function creatChat(req, res) {
 export async function getChatData(req, res) {
     const { channel } = req.params; // URL 파라미터에서 channel 값을 추출
     const mongo_id = req.mongo_id; // 로그인한 사용자 ID
-    console.log('로그인한 사용자 ID:', mongo_id);
+    // console.log('로그인한 사용자 ID:', mongo_id);
+
 
     try {
         if (!channel) {
@@ -130,12 +131,12 @@ export async function getChatData(req, res) {
 
         if (new mongoose.Types.ObjectId(mongo_id).equals(ChatData.TaskUserId)) {
             const user = await User.findOne({ _id: new mongoose.Types.ObjectId(ChatData.toTaskUserId) });
-            console.log('if문 user', user);
+            // console.log('if문 user', user);
 
             return res.status(201).json({ ChatData, Nickname: user?.nickname || 'Unknown',mongo_id, });
         } else if (new mongoose.Types.ObjectId(mongo_id).equals(ChatData.toTaskUserId)) {
             const user = await User.findOne({ _id: new mongoose.Types.ObjectId(ChatData.TaskUserId) });
-            console.log('else if문 user', user);
+            // console.log('else if문 user', user);
 
             return res.status(202).json({ ChatData, Nickname: user?.nickname || 'Unknown',mongo_id, });
         }
@@ -175,8 +176,9 @@ export async function getChatMessages(req, res) {
             return res.status(400).json({ message: '유효하지 않은 채널 ID입니다.' });
         }
 
-        const chat = await Message.find({ chatRoomId: new mongoose.Types.ObjectId(channel) })
+        const chat = await Message.findOne({ chatRoomId: new mongoose.Types.ObjectId(channel) })
             .sort({ timestamp: 1 })
+
 
 
         if (!chat|| chat.length === 0) {

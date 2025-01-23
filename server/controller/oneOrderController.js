@@ -9,7 +9,7 @@ export async function getOrderById(req, res) {
         if (!result) {
             return res.status(404).json({ message: '관련 데이터를 찾을 수 없습니다.' })
         }
-
+        //원흉 찾음
         const currentUser = req.mongo_id
         const decode = result.user_id
         const user = await authQuery.findUserbyToken(decode)

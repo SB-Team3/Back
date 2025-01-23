@@ -13,7 +13,6 @@ export async function getById(taskId) {
         const order = await Order.findOne({ taskId })
             .select('user_Id taskId title taskDetails location conditions partnerPreference schedule payment likes QnA createdAt updatedAt')
             .exec();
-
         if (!order) {
             return null;
         }
@@ -23,7 +22,7 @@ export async function getById(taskId) {
             taskId: order.taskId,
             title: order.title,
             description: order.taskDetails.description,
-            photoUrl: order.taskDetails.photoUrl,
+            thumnail: order.taskDetails.thumnail,
             location: order.location,
             conditions: order.conditions,
             partnerPreference: order.partnerPreference,

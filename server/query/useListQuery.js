@@ -16,7 +16,7 @@ export async function findOrderByUser(user_Id){
         return orders.map(order => ({
             taskId: order.taskId,
             title: order.title,
-            photoUrl: order.taskDetails.photoUrl,
+            thumnail: order.taskDetails.thumnail,
             location: order.location,
             schedule: order.schedule,
             payment: order.payment,
@@ -33,7 +33,7 @@ export async function findListsByPartner(user_Id) {
     try{
             
             const chat = await Chat.find({ toTaskUserId : user_Id })
-            // chat 안에 있는 태스크 아이디 모두 반환하게 하고싶어
+            // chat 안에 있는 태스크 아이디 모두 반환
 
             if (!chat || chat.length === 0) {
                 throw new Error("chat 데이터가 없습니다.");
@@ -61,7 +61,7 @@ export async function findListsByPartner(user_Id) {
             return orders.map(order => ({
                 taskId: order.taskId,
                 title: order.title,
-                photoUrl: order.taskDetails.photoUrl,
+                thumnail: order.taskDetails.thumnail,
                 location: order.location,
                 schedule: order.schedule,
                 payment: order.payment,
@@ -84,21 +84,21 @@ export async function UpdateActive(taskId,user_Id,channel) {
         // 돈거래는 거래완료를 게시물 당사자가 누르면 중간 어디에 돈은 머물러 두게하고
         //  생각해보니까 중간에 두는게 이상함..그럼 심부름 수행완료 버튼도 어딘가에 만들어야함 그럼 부릉 리스트에서 심부름까지 완료했을떄 게시물 올린 당사자가 완료 버튼을 눌렀을때 나가게 해야하는데........
         // 심부름과정까지 완료되면 완전히 돈을 보내고 완료중으로 바꿔야함
-        console.log(channel);
+        // console.log(channel);
         const chat = await Chat.findOne(
             {_id : channel,TaskUserId : user_Id},
             // 찾은 전체 데이터 반환
         )
-        console.log(chat);
-        console.log('taskId',taskId);
+        // console.log(chat);
+        // console.log('taskId',taskId);
 
 
         const orders = await Order.findOneAndUpdate(
             { taskId : taskId},
-            { $set: { isActive: '완료', updatedAt: new Date() } },
+            { $set: { isCompleted: true,isActive: '거래완료', updatedAt: new Date() } },
             { new: true } // 업데이트된 데이터를 반환
         )
-        console.log('orders',orders);
+        // console.log('orders',orders);
 
         if (!orders || orders.length === 0) {
             throw new Error("Order 데이터가 없습니다.");
@@ -115,19 +115,18 @@ export async function UpdateActive(taskId,user_Id,channel) {
 // 심부름 신청상태 가져오기
 export async function GetActive(taskId,user_Id,channel) {
     try{
-        console.log(channel);
+        // console.log(channel);
         const chat = await Chat.findOne(
-            {_id : channel,TaskUserId : user_Id},
-            // 찾은 전체 데이터 반환
+            {_id : channel, TaskUserId : user_Id},
         )
-        console.log(chat);
-        console.log('taskId',taskId);
+        // console.log(chat);
+        // console.log('taskId',taskId);
 
 
         const orders = await Order.findOne(
             { taskId : taskId},
         )
-        console.log('orders',orders);
+        // console.log('orders',orders);
 
         if (!orders || orders.length === 0) {
             throw new Error("Order 데이터가 없습니다.");
